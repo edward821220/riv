@@ -182,12 +182,6 @@ export default function Home() {
         {video ? (
           <Video ref={videoRef} src={video} autoPlay loop muted />
         ) : (
-          // <Banner
-          //   src={PlaceHolder}
-          //   alt="placeholder"
-          //   object-fit="center"
-          //   object-position="center"
-          // ></Banner>
           <Banner
             src={PlaceHolder}
             alt="placeholder"
