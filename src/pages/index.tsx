@@ -119,7 +119,7 @@ export default function Home() {
     let videoCache = localStorage.getItem("video");
     if (!videoCache) {
       fetchVideo().then((data) => {
-        setVideo(data.video);
+        setVideo(data.src);
         localStorage.setItem(
           "video",
           JSON.stringify({
@@ -135,7 +135,7 @@ export default function Home() {
 
     if (diff >= 3600) {
       fetchVideo().then((data) => {
-        setVideo(data.video);
+        setVideo(data.src);
         localStorage.setItem(
           "video",
           JSON.stringify({
