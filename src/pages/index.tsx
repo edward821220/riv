@@ -177,7 +177,7 @@ export default function Home() {
       </Head>
       <Banner>
         {video ? (
-          <Video ref={videoRef} src={video} autoPlay loop />
+          <Video ref={videoRef} src={video} autoPlay loop muted />
         ) : (
           <Image
             src={PlaceHolder}
