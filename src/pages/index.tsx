@@ -1,3 +1,4 @@
+import { useEffect, useState, useRef } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import styled from "styled-components";
@@ -8,9 +9,19 @@ import Pic3 from "../../public/section2-image3.png";
 import Pic4 from "../../public/section2-image4.png";
 import Pic5 from "../../public/section2-image5.png";
 import Pic6 from "../../public/section2-image6.png";
+import SmallPic1 from "../../public/section2-image1-mobile.png";
+import SmallPic2 from "../../public/section2-image2-mobile.png";
+import SmallPic3 from "../../public/section2-image3-mobile.png";
+import SmallPic4 from "../../public/section2-image4-mobile.png";
+import SmallPic5 from "../../public/section2-image5-mobile.png";
+import SmallPic6 from "../../public/section2-image6-mobile.png";
 
-const Banner = styled(Image)`
+const Banner = styled.div`
   max-width: 100%;
+`;
+
+const Video = styled.video`
+  width: 100%;
 `;
 
 const Main = styled.main`
@@ -19,6 +30,7 @@ const Main = styled.main`
   justify-content: center;
   align-items: center;
   height: 71.1111111vw;
+  overflow: hidden;
   @media screen and (max-width: 375px) {
     height: 226.4vw;
   }
@@ -99,7 +111,68 @@ const Image6 = styled(Image)`
   }
 `;
 
+const fetchVideo = async () => {
+  const res = await fetch("/api/video");
+  const data = await res.json();
+  return data;
+};
+
 export default function Home() {
+  const [video, setVideo] = useState("");
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    let videoCache = localStorage.getItem("video");
+    if (!videoCache) {
+      fetchVideo().then((data) => {
+        setVideo(data.video);
+        localStorage.setItem(
+          "video",
+          JSON.stringify({
+            video: data.src,
+            time: Date.now(),
+          })
+        );
+      });
+      return;
+    }
+    const { video, time } = JSON.parse(videoCache);
+    const diff = (Date.now() - time) / 1000;
+
+    if (diff >= 3600) {
+      fetchVideo().then((data) => {
+        setVideo(data.video);
+        localStorage.setItem(
+          "video",
+          JSON.stringify({
+            video: data.src,
+            time: Date.now(),
+          })
+        );
+      });
+    } else {
+      setVideo(video);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!video || !videoRef.current) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (!videoRef.current) return;
+      if (entries[0].isIntersecting) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    });
+
+    observer.observe(videoRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [video]);
+
   return (
     <>
       <Head>
@@ -108,12 +181,18 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Banner
-        src={PlaceHolder}
-        alt="placeholder"
-        object-fit="contain"
-        objectPosition="center"
-      ></Banner>
+      <Banner>
+        {video ? (
+          <Video ref={videoRef} src={video} autoPlay loop />
+        ) : (
+          <Image
+            src={PlaceHolder}
+            alt="placeholder"
+            object-fit="contain"
+            object-position="center"
+          ></Image>
+        )}
+      </Banner>
       <Main>
         <Text>
           Creating perfect
