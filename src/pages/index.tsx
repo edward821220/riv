@@ -119,7 +119,7 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    let videoCache = localStorage.getItem("video");
+    const videoCache = localStorage.getItem("video");
     if (!videoCache) {
       fetchVideo().then((data) => {
         setVideo(data.src);
