@@ -10,10 +10,13 @@ import Pic4 from "../../public/section2-image4.png";
 import Pic5 from "../../public/section2-image5.png";
 import Pic6 from "../../public/section2-image6.png";
 
-const Banner = styled.div`
-  max-width: 100%;
+const BannerContainer = styled.div`
+  width: 100%;
 `;
 
+const Banner = styled(Image)`
+  width: 100%;
+`;
 const Video = styled.video`
   width: 100%;
 `;
@@ -175,18 +178,24 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Banner>
+      <BannerContainer>
         {video ? (
           <Video ref={videoRef} src={video} autoPlay loop muted />
         ) : (
-          <Image
+          // <Banner
+          //   src={PlaceHolder}
+          //   alt="placeholder"
+          //   object-fit="center"
+          //   object-position="center"
+          // ></Banner>
+          <Banner
             src={PlaceHolder}
             alt="placeholder"
             object-fit="contain"
             object-position="center"
-          ></Image>
+          ></Banner>
         )}
-      </Banner>
+      </BannerContainer>
       <Main>
         <Text>
           Creating perfect
